@@ -120,9 +120,12 @@ public class DocxController {
             byte[] buffer = new byte[fis.available()];
             fis.read(buffer);
 
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Content-Disposition", "inline;filename="+System.currentTimeMillis()+".doc");
             toClient = new BufferedOutputStream(response.getOutputStream());
             toClient.write(buffer);
             toClient.flush();
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,14 +133,15 @@ public class DocxController {
             e.printStackTrace();
         } finally {
             try {
+
                 if (fis != null) {
                     fis.close();
                 }
-                if (toClient != null) {
-                    toClient.close();
-                }
                 if (out != null) {
                     out.close();
+                }
+                if (toClient != null) {
+                    toClient.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
